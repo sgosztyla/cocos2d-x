@@ -68,6 +68,10 @@ public:
 
 	/**Constructor.*/
     CustomCommand();
+    /**Copy Constructor.*/
+    CustomCommand(const CustomCommand &other);
+    /**Copy Assignment.*/
+    CustomCommand& operator=(const CustomCommand &other);
     /**Destructor.*/
     ~CustomCommand();
     
@@ -211,6 +215,9 @@ public:
     const CallBackFunc &getAfterCallback() { return _afterCallback; }
 
 protected:
+    void copyInternal(const CustomCommand& other);
+    void cleanupInternal();
+    
     unsigned int computeIndexSize() const;
 
     backend::Buffer* _vertexBuffer = nullptr;

@@ -649,6 +649,8 @@ protected:
 
     struct BatchCommand {
         BatchCommand();
+        BatchCommand(const BatchCommand &other);
+        BatchCommand& operator=(const BatchCommand &other);
         ~BatchCommand();
 
         CustomCommand textCommand;
@@ -656,6 +658,9 @@ protected:
         CustomCommand shadowCommand;
 
         std::array<CustomCommand*, 3> getCommandArray();
+        
+    protected:
+        void cleanupInternal();
     };
 
     virtual void setFontAtlas(FontAtlas* atlas, bool distanceFieldEnabled = false, bool useA8Shader = false);

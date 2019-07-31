@@ -35,10 +35,59 @@ CustomCommand::CustomCommand()
     _type = RenderCommand::Type::CUSTOM_COMMAND;
 }
 
+CustomCommand::CustomCommand(const CustomCommand &other) : RenderCommand(other)
+{
+    copyInternal(other);
+}
+
+CustomCommand& CustomCommand::operator=(const CustomCommand &other)
+{
+    RenderCommand::operator=(other);
+    
+    cleanupInternal();
+    copyInternal(other);
+    
+    return *this;
+}
+
 CustomCommand::~CustomCommand()
 {
-    CC_SAFE_RELEASE(_vertexBuffer);
-    CC_SAFE_RELEASE(_indexBuffer);
+    cleanupInternal();
+}
+
+void CustomCommand::copyInternal(const CustomCommand &other)
+{
+    _vertexBuffer = other._vertexBuffer;
+    _indexBuffer = other._indexBuffer;
+    
+    _vertexDrawStart = other._vertexDrawStart;
+    _vertexDrawCount = other._vertexDrawCount;
+    
+    _indexDrawOffset = other._indexDrawOffset;
+    _indexDrawCount = other._indexDrawCount;
+    
+    _drawType = other._drawType;
+    _primitiveType = other._primitiveType;
+    _indexFormat = other._indexFormat;
+    
+    _lineWidth = other._lineWidth;
+    
+    _indexSize = other._indexSize;
+    
+    _vertexCapacity = other._vertexCapacity;
+    _indexCapacity = other._indexCapacity;
+    
+    _beforeCallback = other._beforeCallback;
+    _afterCallback = other._afterCallback;
+    
+    CC_SAFE_RETAIN(_vertexBuffer);
+    CC_SAFE_RETAIN(_indexBuffer);
+}
+
+void CustomCommand::cleanupInternal()
+{
+    CC_SAFE_RELEASE_NULL(_vertexBuffer);
+    CC_SAFE_RELEASE_NULL(_indexBuffer);
 }
 
 void CustomCommand::init(float depth, const cocos2d::Mat4 &modelViewTransform, unsigned int flags)

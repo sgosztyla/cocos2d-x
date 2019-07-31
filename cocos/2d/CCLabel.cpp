@@ -210,6 +210,33 @@ Label::BatchCommand::BatchCommand()
 
 Label::BatchCommand::~BatchCommand()
 {
+    cleanupInternal();
+}
+
+Label::BatchCommand::BatchCommand(const BatchCommand &other) : textCommand(other.textCommand), outLineCommand(other.outLineCommand), shadowCommand(other.shadowCommand)
+{
+    CC_SAFE_RETAIN(textCommand.getPipelineDescriptor().programState);
+    CC_SAFE_RETAIN(outLineCommand.getPipelineDescriptor().programState);
+    CC_SAFE_RETAIN(shadowCommand.getPipelineDescriptor().programState);
+}
+
+Label::BatchCommand& Label::BatchCommand::operator=(const BatchCommand &other)
+{    
+    cleanupInternal();
+    
+    textCommand = other.textCommand;
+    outLineCommand = other.outLineCommand;
+    shadowCommand = other.shadowCommand;
+    
+    CC_SAFE_RETAIN(textCommand.getPipelineDescriptor().programState);
+    CC_SAFE_RETAIN(outLineCommand.getPipelineDescriptor().programState);
+    CC_SAFE_RETAIN(shadowCommand.getPipelineDescriptor().programState);
+    
+    return *this;
+}
+
+void Label::BatchCommand::cleanupInternal()
+{
     CC_SAFE_RELEASE_NULL(textCommand.getPipelineDescriptor().programState);
     CC_SAFE_RELEASE_NULL(shadowCommand.getPipelineDescriptor().programState);
     CC_SAFE_RELEASE_NULL(outLineCommand.getPipelineDescriptor().programState);
